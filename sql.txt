@@ -1,0 +1,20 @@
+/*let config = {
+            server: "DESKTOP-919QSJB\\SQLEXPRESS03",
+            database: "databaza1",
+            driver: "msnodesqlv8", 
+            options: {
+                trustedConnection: true
+            }
+        }
+        sql.connect(config, (err) => {
+            if (err) {
+                console.log(err)
+            }
+            else {
+                let req = new sql.Request();
+                req.query("select * from dbo.Citizen", (err, records) => {
+                    console.log(records);
+                })
+            }
+        })
+        */

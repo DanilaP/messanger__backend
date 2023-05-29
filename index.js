@@ -45,7 +45,6 @@ app.post("/upload", async function (req, res) {
     } 
     else res.send("No file uploaded !!");
 });
-
 app.post("/uploadFiles", async function (req, res) {
     if (req.files && Object.keys(req.files).length !== 0) {
 
@@ -53,14 +52,17 @@ app.post("/uploadFiles", async function (req, res) {
         const userId = jwt_decode(token);
         let isEmpty = await User.findOne({_id: userId.id});
 
-        const uploadedFile = req.files.uploadFile;  
-        const uploadPath = __dirname + "/userAvatars/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name;
+        const folderId = Number(req.body.folderId);
+        const uploadedFile = req.files.uploadFile;
+        const uploadPath = __dirname + "/userAvatars/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name; 
         const obj = {
             path: "http://localhost:5000/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name,
             fileName: uploadedFile.name,
             size: (uploadedFile.size/1048576).toFixed(2),
             type: uploadedFile.mimetype,
+            folderId: folderId,
         }
+        
         if (fs.existsSync(uploadPath)) {
             res.status(400).json({message: "Данный файл уже существует в вашем хранилище"});
         }
@@ -80,31 +82,43 @@ app.post("/uploadFiles", async function (req, res) {
     } 
     else res.send("No file uploaded !!");
 });
+app.post("/createFolder", async function (req, res) {
+    const token = req.headers.authorization;     
+    const userId = jwt_decode(token);
+    let currentUser = await User.findOne({_id: userId.id});
 
+    try {
+        await User.updateOne({ _id: currentUser._id }, { $set: { folders: [...currentUser.folders, {
+            folderName: req.body.folderName,
+            folderId: currentUser.folders.length + 1,
+            parentFolderId: req.body.parentFolderId,
+        }]}});
+        currentUser.folders = [...currentUser.folders, {
+            folderName: req.body.folderName,
+            folderId: currentUser.folders.length + 1,
+            parentFolderId: req.body.parentFolderId,
+        }]
+        res.status(200).json({
+            message: "Folder created sucessfull", 
+            folders: currentUser.folders.filter(el => el.parentFolderId === req.body.parentFolderId)
+        })
+    } catch (err) {
+        console.log(err);
+    }
+});
+app.post("/getFilesFromFolder", async function(req, res) {
+    const token = req.headers.authorization;     
+    const userId = jwt_decode(token);
+    let currentUser = await User.findOne({_id: userId.id});
+
+    let newFiles = currentUser.files.filter(el => el.folderId === req.body.folderId);
+    let newFolders = currentUser.folders.filter(el => el.parentFolderId === req.body.folderId);
+
+    res.status(200).json({message: "Getting file sucessfull", folders: newFolders, files: newFiles});
+})
 async function startApp() {
     try {
         await mongoose.connect(BD_URL);
-        
-        /*let config = {
-            server: "DESKTOP-919QSJB\\SQLEXPRESS03",
-            database: "databaza1",
-            driver: "msnodesqlv8", 
-            options: {
-                trustedConnection: true
-            }
-        }
-        sql.connect(config, (err) => {
-            if (err) {
-                console.log(err)
-            }
-            else {
-                let req = new sql.Request();
-                req.query("select * from dbo.Citizen", (err, records) => {
-                    console.log(records);
-                })
-            }
-        })
-        */
         app.listen(PORT, () => console.log('Server started at PORT' + " " + PORT));
     } catch (error) {
         console.log(error);

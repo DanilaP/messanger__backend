@@ -1,4 +1,4 @@
-const cors = require('cors');
+//const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const authRouter = require('./authRoutes');
@@ -16,6 +16,14 @@ const BD_URL = `mongodb+srv://danila:355473288@cluster0.ag5ij.mongodb.net/?retry
 const app = express();
 mongoose.set('strictQuery', false);
 
+const cors = require('cors');
+const corsOptions ={
+    origin:'https://backend-danila123.amvera.io', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+
+app.use(cors(corsOptions));
 app.use(fileUpload())
 app.use(cors());
 app.use(express.json());

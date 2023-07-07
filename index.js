@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const authRouter = require('./authRoutes');
 const profileRouter = require('./Profile/profileRoutes');
 const filesRouter = require('./Files/filesRoutes');
+const adminRouter = require('./AdminPanel/adminPanelRoutes');
 const fileUpload = require('express-fileupload')
 const User = require("./models/User")
 const jwt_decode = require('jwt-decode')
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/auth', authRouter);
 app.use('/profile', profileRouter);
 app.use('/files', filesRouter);
+app.use('/admin', adminRouter);
 app.use(express.static('./userAvatars'));
 
 

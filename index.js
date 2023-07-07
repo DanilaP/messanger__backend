@@ -18,7 +18,7 @@ mongoose.set('strictQuery', false);
 
 const cors = require('cors');
 const corsOptions ={
-    origin:'https://backend-danila123.amvera.io', 
+    origin:'https://diploma-front.vercel.app/', 
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }

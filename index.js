@@ -18,9 +18,10 @@ mongoose.set('strictQuery', false);
 
 const cors = require('cors');
 const corsOptions ={
-    origin:'https://diploma-front.vercel.app/', 
+    origin:true, 
     credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
+    optionSuccessStatus:200,
+    methods: "GET,HEAD,PUT,POST,DELETE"
 }
 
 app.use(cors(corsOptions));

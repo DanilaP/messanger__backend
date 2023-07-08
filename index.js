@@ -23,7 +23,7 @@ var corsOptions = {
 app.use(cors(corsOptions));s
 
 app.use(fileUpload())
-app.use(cors());
+//app.use(cors());
 app.use(express.json());
 app.use('/auth', authRouter);
 app.use('/profile', profileRouter);

@@ -14,13 +14,14 @@ const sql = require("mssql/msnodesqlv8");
 const PORT = 5000;
 const BD_URL = `mongodb+srv://danila:355473288@cluster0.ag5ij.mongodb.net/?retryWrites=true&w=majority`;
 const app = express();
+app.use(cors());
 mongoose.set('strictQuery', false);
 
-var corsOptions = {
+/*var corsOptions = {
   origin: '*',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-app.use(cors(corsOptions));
+}*/
+
 
 app.use(fileUpload())
 //app.use(cors());

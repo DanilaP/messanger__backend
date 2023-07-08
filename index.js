@@ -15,6 +15,12 @@ const PORT = 5000;
 const BD_URL = `mongodb+srv://danila:355473288@cluster0.ag5ij.mongodb.net/?retryWrites=true&w=majority`;
 const app = express();
 app.use(cors());
+app.all('*', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+    //...
+});
 mongoose.set('strictQuery', false);
 
 /*var corsOptions = {

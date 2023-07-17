@@ -14,13 +14,7 @@ const sql = require("mssql/msnodesqlv8");
 const PORT = 5000;
 const BD_URL = `mongodb+srv://danila:355473288@cluster0.ag5ij.mongodb.net/?retryWrites=true&w=majority`;
 const app = express();
-app.use(cors());
-app.all('*', function (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-    //...
-});
+app.use(cors({origin: '*'}));
 mongoose.set('strictQuery', false);
 
 /*var corsOptions = {
@@ -30,7 +24,6 @@ mongoose.set('strictQuery', false);
 
 
 app.use(fileUpload())
-//app.use(cors());
 app.use(express.json());
 app.use('/auth', authRouter);
 app.use('/profile', profileRouter);

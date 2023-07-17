@@ -32,6 +32,9 @@ app.use('/admin', adminRouter);
 app.use(express.static('./userAvatars'));
 
 
+app.post("/test", cors(), async function(req, res) {
+    res.status(200).json({message: "Hello world!"});
+})
 app.post("/upload", async function (req, res) {
     if (req.files && Object.keys(req.files).length !== 0) {
 

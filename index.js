@@ -9,7 +9,6 @@ const fileUpload = require('express-fileupload')
 const User = require("./models/User")
 const jwt_decode = require('jwt-decode')
 const fs = require('fs');
-const sql = require("mssql/msnodesqlv8");
 
 const PORT = 5000;
 const BD_URL = `mongodb+srv://danila:355473288@cluster0.ag5ij.mongodb.net/?retryWrites=true&w=majority`;

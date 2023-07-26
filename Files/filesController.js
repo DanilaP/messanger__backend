@@ -34,7 +34,7 @@ class profileController {
             const token = req.headers.authorization;     
             const userId = jwt_decode(token);
             const user = await User.findOne({_id: userId.id});
-            const path = "./userAvatars/" + req.body.deletedFilePath.replace('http://localhost:5000/', '');
+            const path = "./userAvatars/" + req.body.deletedFilePath.replace('https://backend-danila123.amvera.io/', '');
 
             let newFilesArray = user.files.filter(element => element.path !== req.body.deletedFilePath);
             await User.updateOne({ _id: userId.id }, { $set: { files: newFilesArray } });
@@ -65,7 +65,7 @@ class profileController {
 
             user.files.map((el) => {
                 if (arr.includes(el.folderId)) {
-                    const path = "./userAvatars/" + el.path.replace('http://localhost:5000/', '');
+                    const path = "./userAvatars/" + el.path.replace('https://backend-danila123.amvera.io/', '');
                     fs.unlinkSync(path);
                 }
             })

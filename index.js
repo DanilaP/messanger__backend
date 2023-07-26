@@ -5,9 +5,9 @@ const authRouter = require('./authRoutes');
 const profileRouter = require('./Profile/profileRoutes');
 const filesRouter = require('./Files/filesRoutes');
 const adminRouter = require('./AdminPanel/adminPanelRoutes');
-const fileUpload = require('express-fileupload')
-const User = require("./models/User")
-const jwt_decode = require('jwt-decode')
+const fileUpload = require('express-fileupload');
+const User = require("./models/User");
+const jwt_decode = require('jwt-decode');
 const fs = require('fs');
 
 const PORT = 5000;
@@ -33,7 +33,7 @@ app.use(express.static('./userAvatars'));
 
 app.post("/test", cors(), async function(req, res) {
     res.status(200).json({message: "Hello world!"});
-})
+});
 app.post("/upload", async function (req, res) {
     if (req.files && Object.keys(req.files).length !== 0) {
 
@@ -43,14 +43,14 @@ app.post("/upload", async function (req, res) {
 
         const uploadedFile = req.files.uploadFile;
         const uploadPath = __dirname + "/userAvatars/" + isEmpty.userLogin + "_" + uploadedFile.name;
-        await User.updateOne({ _id: isEmpty._id }, { $set: { avatar: "http://localhost:5000/" + isEmpty.userLogin + "_" + uploadedFile.name } });
+        await User.updateOne({ _id: isEmpty._id }, { $set: { avatar: "https://backend-danila123.amvera.io/" + isEmpty.userLogin + "_" + uploadedFile.name } });
 
         uploadedFile.mv(uploadPath, function (err) {
             if (err) {
                 console.log(err);
                 res.send("Failed !!");
             } 
-            else res.json({message: "Successfully Uploaded !!", avatar: "http://localhost:5000/" + isEmpty.userLogin + "_" + uploadedFile.name});
+            else res.json({message: "Successfully Uploaded !!", avatar: "https://backend-danila123.amvera.io/" + isEmpty.userLogin + "_" + uploadedFile.name});
         });
     } 
     else res.send("No file uploaded !!");
@@ -66,7 +66,7 @@ app.post("/uploadFiles", async function (req, res) {
         const uploadedFile = req.files.uploadFile;
         const uploadPath = __dirname + "/userAvatars/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name; 
         const obj = {
-            path: "http://localhost:5000/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name,
+            path: "https://backend-danila123.amvera.io/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name,
             fileName: uploadedFile.name,
             size: (uploadedFile.size/1048576).toFixed(2),
             type: uploadedFile.mimetype,
@@ -125,7 +125,7 @@ app.post("/getFilesFromFolder", async function(req, res) {
     let newFolders = currentUser.folders.filter(el => el.parentFolderId === req.body.folderId);
 
     res.status(200).json({message: "Getting file sucessfull", folders: newFolders, files: newFiles});
-})
+});
 async function startApp() {
     try {
         await mongoose.connect(BD_URL);

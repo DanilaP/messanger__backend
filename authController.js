@@ -26,7 +26,7 @@ class authController {
                     userLogin, 
                     userPassword: hashPassword, 
                     balance: balance, 
-                    avatar: "http://localhost:5000/" + "avatar.png",
+                    avatar: "https://backend-danila123.amvera.io/" + "avatar.png",
                     secretAccessCode: userPassword,
                 });
                 const token = generateAccessToken(user._id);

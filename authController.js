@@ -26,7 +26,7 @@ class authController {
                     userLogin, 
                     userPassword: hashPassword, 
                     balance: balance, 
-                    avatar: "https://backend-danila123.amvera.io/" + "avatar.png",
+                    avatar: "http://localhost:5000/" + "avatar.png",
                     secretAccessCode: userPassword,
                 });
                 const token = generateAccessToken(user._id);
@@ -86,6 +86,8 @@ class authController {
                 files: isEmpty.files,
                 secretAccessCode: isEmpty.secretAccessCode,
                 folders: isEmpty.folders,
+                //
+                backet: isEmpty.backet,
             }})
         }
         else {

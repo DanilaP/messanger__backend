@@ -44,6 +44,8 @@ class profileController {
                     avatar: foundedUser.avatar,
                     files: foundedUser.files,
                     folders: foundedUser.folders,
+                    //
+                    backet: foundedUser.backet,
                 }})
             }
             else res.status(400).json({message: "Access dined! Try again."})

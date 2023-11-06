@@ -18,6 +18,7 @@ class profileController {
                 size: newfiles[indexOfChangedFile].size,
                 type: newfiles[indexOfChangedFile].type,
                 folderId: newfiles[indexOfChangedFile].folderId,
+                status: newfiles[indexOfChangedFile].status
             };
 
             await User.updateOne({ _id: userId.id }, { $set: { files: newfiles } });
@@ -99,6 +100,26 @@ class profileController {
         catch (e) {
             console.log(e);
             res.status(400).json({message: "Could not change folder name!"})
+        }
+    }
+    async changeFileStatus(req, res) {
+        try {
+            const token = req.headers.authorization;     
+            const userId = jwt_decode(token);
+            const user = await User.findOne({_id: userId.id});
+            
+            const newfiles = user.files;
+            const newFile = req.body.file;
+            let indexOfChangedFile = newfiles.findIndex(el => el.path == newFile.path);
+            newfiles[indexOfChangedFile] = newFile;
+
+            await User.updateOne({ _id: userId.id }, { $set: { files: newfiles } });
+
+            res.json({message: "Sucessfull!", files: newfiles})
+        }
+        catch (e) {
+            console.log(e);
+            res.status(400).json({message: "Error!"});
         }
     }
 }

@@ -64,19 +64,22 @@ app.post("/uploadFiles", async function (req, res) {
 
         const folderId = Number(req.body.folderId);
         const uploadedFile = req.files.uploadFile;
-        const uploadPath = __dirname + "/userAvatars/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name; 
+        let uploadPath = __dirname + "/userAvatars/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name; 
         const obj = {
             path: "http://localhost:5000/userFiles/" + isEmpty.userLogin + "_" + uploadedFile.name,
             fileName: uploadedFile.name,
             size: (uploadedFile.size/1048576).toFixed(2),
             type: uploadedFile.mimetype,
             folderId: folderId,
+            status: "public"
         }
         
         if (fs.existsSync(uploadPath)) {
-            res.status(400).json({message: "Данный файл уже существует в вашем хранилище"});
+            uploadPath = __dirname + "/userAvatars/userFiles/" + isEmpty.userLogin + "_" +  "1" + uploadedFile.name;
+            obj.fileName = "1"+uploadedFile.name;
+            obj.path = "http://localhost:5000/userFiles/" + isEmpty.userLogin + "_" + "1" + uploadedFile.name;
+            //res.status(400).json({message: "Данный файл уже существует в вашем хранилище"});
         }
-        else {
             await User.updateOne({ _id: isEmpty._id }, { $set: { files: [...isEmpty.files, obj]} 
             });
     
@@ -87,7 +90,7 @@ app.post("/uploadFiles", async function (req, res) {
                 } 
                 else res.json({message: "Succesfully uploaded!", files: [...isEmpty.files, obj]});
             });
-        }
+
         
     } 
     else res.send("No file uploaded !!");
@@ -102,6 +105,7 @@ app.post("/createFolder", async function (req, res) {
             folderName: req.body.folderName,
             folderId: currentUser.folders.length + 1,
             parentFolderId: req.body.parentFolderId,
+            status: "public"
         }]}});
         currentUser.folders = [...currentUser.folders, {
             folderName: req.body.folderName,
@@ -126,7 +130,27 @@ app.post("/getFilesFromFolder", async function(req, res) {
 
     res.status(200).json({message: "Getting file sucessfull", folders: newFolders, files: newFiles});
 });
+app.post("/changeFolderStatus", async function(req, res) {
+    try {
+        const token = req.headers.authorization;     
+        const userId = jwt_decode(token);
+        const user = await User.findOne({_id: userId.id});
+        
+        const newfolders = user.folders;
+        const newFolder = req.body.folder;
 
+        let indexOfChangedFolder = newfolders.findIndex(el => el.folderId === newFolder.folderId);
+        newfolders[indexOfChangedFolder] = newFolder;
+
+        await User.updateOne({ _id: userId.id }, { $set: { folders: newfolders } });
+
+        res.json({message: "Sucessfull!", folders: newfolders})
+    }
+    catch (e) {
+        console.log(e);
+        res.status(400).json({message: "Error!"});
+    }
+})
 async function startApp() {
     try {
         await mongoose.connect(BD_URL);

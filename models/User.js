@@ -8,7 +8,7 @@ const User = new Schema({
     files: {type: Array},
     secretAccessCode: {type: String},
     folders: {type: Array},
-    backet: {type: Array}
+    memory: {type: Number}
 })
 
 module.exports = model('User', User)

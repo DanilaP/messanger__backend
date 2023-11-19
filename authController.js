@@ -28,7 +28,8 @@ class authController {
                     balance: balance, 
                     avatar: "http://localhost:5000/" + "avatar.png",
                     secretAccessCode: userPassword,
-                    memory: 8192
+                    memory: 8192,
+                    backet: []
                 });
                 const token = generateAccessToken(user._id);
                 user.save();
@@ -88,7 +89,8 @@ class authController {
                 secretAccessCode: isEmpty.secretAccessCode,
                 folders: isEmpty.folders,
                 //
-                memory: isEmpty.memory
+                memory: isEmpty.memory,
+                backet: isEmpty.backet
             }})
         }
         else {

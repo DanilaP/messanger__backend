@@ -38,11 +38,22 @@ class profileController {
             const path = "./userAvatars/" + req.body.deletedFilePath.replace('http://localhost:5000/', '');
 
             let newFilesArray = user.files.filter(element => element.path !== req.body.deletedFilePath);
-            await User.updateOne({ _id: userId.id }, { $set: { files: newFilesArray } });
-            fs.unlinkSync(path);
+
+            let newBacketArray = user.backet;
+            let deletedUserFile = user.files.filter(el => el.path == req.body.deletedFilePath);
+            newBacketArray = [...newBacketArray, deletedUserFile[0]];
+
+            if (newBacketArray.length > 10) {
+                let firstElement = newBacketArray.shift();
+                const deletedPath = "./userAvatars/" + firstElement.path.replace('http://localhost:5000/', '');
+                fs.unlinkSync(deletedPath);
+            }
+
+            await User.updateOne({ _id: userId.id }, { $set: { files: newFilesArray, backet: newBacketArray } });
+            
             //fs.rmdir(path, {recursive: true}, (err) => console.log(err));
 
-            res.status(200).json({message: "File was deleted succesfull", files: newFilesArray})
+            res.status(200).json({message: "File was deleted succesfull", files: newFilesArray, backet: newBacketArray})
         }
         catch (e) {
             console.log(e);
@@ -120,6 +131,43 @@ class profileController {
         catch (e) {
             console.log(e);
             res.status(400).json({message: "Error!"});
+        }
+    }
+    async recoverUserFile(req, res) {
+        try {
+            const token = req.headers.authorization;     
+            const userId = jwt_decode(token);
+            const user = await User.findOne({_id: userId.id});
+    
+            let newUserFiles = user.files;
+            newUserFiles = [...newUserFiles, req.body.file];
+            let newUserBacket = user.backet.filter((el) => el.path !== req.body.file.path);
+
+            await User.updateOne({ _id: userId.id }, { $set: { files: newUserFiles, backet: newUserBacket } });
+    
+            res.status(200).json({message: "Sucessfully recovered!", files: newUserFiles, backet: newUserBacket});
+        }
+        catch (error) {
+            res.status(200).json({message: "Error!"})
+            console.log(error);
+        }
+    }
+    async deleteFileFromBacket(req, res) {
+        try {
+            const token = req.headers.authorization;     
+            const userId = jwt_decode(token);
+            const user = await User.findOne({_id: userId.id});
+
+            let newBacket = user.backet.filter((el) => el.path !== req.body.file.path);
+            const path = "./userAvatars/" + req.body.file.path.replace('http://localhost:5000/', '');
+            fs.unlinkSync(path);
+
+            await User.updateOne({ _id: userId.id }, { $set: { backet: newBacket } });
+            res.status(200).json({message: "Sucessfully deleted!", backet: newBacket});
+        }
+        catch (error) {
+            res.status(200).json({message: "Error!"});
+            console.log(err);
         }
     }
 }

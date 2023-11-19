@@ -7,5 +7,7 @@ router.post('/deleteFile', controller.deleteFile);
 router.post('/deleteFolder', controller.deleteFolder);
 router.post('/changeFolderName', controller.changeFolderName);
 router.post('/changeFileStatus', controller.changeFileStatus);
+router.post('/recoverUserFile', controller.recoverUserFile);
+router.post('/deleteFileFromBacket', controller.deleteFileFromBacket);
 
 module.exports = router

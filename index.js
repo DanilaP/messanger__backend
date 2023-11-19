@@ -151,6 +151,24 @@ app.post("/changeFolderStatus", async function(req, res) {
         res.status(400).json({message: "Error!"});
     }
 })
+app.post("/shareUserMemory", async function(req, res) {
+    try {
+        const token = req.headers.authorization;     
+        const userId = jwt_decode(token);
+        const user = await User.findOne({_id: userId.id});
+    
+        const userToShare = await User.findOne({_id: req.body.userId});
+    
+        await User.updateOne({ _id: user._id }, { $inc: { memory: -req.body.memory } });
+        await User.updateOne({ _id: userToShare._id }, { $inc: { memory: req.body.memory } });
+        
+        res.status(200).json({message: "Вы успешно передали память другому пользователю!"});
+    }
+    catch (error) {
+        res.status(200).json({message: "Error!"});
+        console.log(error);
+    }
+})
 async function startApp() {
     try {
         await mongoose.connect(BD_URL);

@@ -74,19 +74,25 @@ class profileController {
             })
             let newFoldersArray = user.folders.filter(el => !arr.includes(el.folderId));
             let newFilesArray = user.files.filter(el => !arr.includes(el.folderId));
-
+            let newUserBacket = user.backet.filter(el => !el.folderId == req.body.folderId);
+            
             user.files.map((el) => {
                 if (arr.includes(el.folderId)) {
                     const path = "./userAvatars/" + el.path.replace('http://localhost:5000/', '');
                     fs.unlinkSync(path);
                 }
             })
-            
-            await User.updateOne({ _id: userId.id }, { $set: { folders: newFoldersArray, files: newFilesArray } });
+    
+            await User.updateOne({ _id: userId.id }, { $set: { 
+                folders: newFoldersArray, 
+                files: newFilesArray, 
+                backet: newUserBacket } 
+            });
             res.status(200).json({
                 message: "Folder was deleted succesfull", 
                 folders: newFoldersArray.filter(el => el.parentFolderId === req.body.parentFolderId),
-                files: newFilesArray
+                files: newFilesArray,
+                backet: newUserBacket
             })
         }
         catch (e) {
@@ -167,8 +173,69 @@ class profileController {
         }
         catch (error) {
             res.status(200).json({message: "Error!"});
-            console.log(err);
+            console.log(error);
         }
     }
+    async moveFolderToBacket(req, res) {
+        try {
+            const token = req.headers.authorization;     
+            const userId = jwt_decode(token);
+            const user = await User.findOne({_id: userId.id});
+    
+            let newBacketArray = user.backet;
+            let deletedFolder = req.body.folder;
+            deletedFolder.isDeleted = true;
+            newBacketArray = [...newBacketArray, deletedFolder];
+            
+            let newFoldersArray = user.folders.filter(el => el.folderId !== deletedFolder.folderId);
+            newFoldersArray = [...newFoldersArray, deletedFolder];
+            
+            
+            await User.updateOne({ _id: userId.id }, { $set: 
+                { 
+                folders: newFoldersArray, 
+                backet: newBacketArray 
+                } 
+            });
+            res.status(200).json({
+                message: "Folder now in your backet", 
+                folders: newFoldersArray.filter(el => el.parentFolderId === req.body.parentFolderId),
+                backet: newBacketArray
+            })
+        } 
+        catch (error) {
+            res.status(400).json({
+                message: "Error!", 
+            })
+        }
+    }
+    async recoverFolderFromBacket(req, res) {
+        try {
+            const token = req.headers.authorization;     
+            const userId = jwt_decode(token);
+            const user = await User.findOne({_id: userId.id});
+            
+            let folderForRecovering = req.body.folder;
+            folderForRecovering.isDeleted = false;
+
+            let newFoldersArray = user.folders.filter(el => el.folderId !== folderForRecovering.folderId);
+            newFoldersArray = [...newFoldersArray, folderForRecovering];
+
+            let newBacketArray = user.backet.filter(el => el.folderId !== folderForRecovering.folderId);
+
+            await User.updateOne({ _id: userId.id }, { $set: { 
+                folders: newFoldersArray, 
+                backet: newBacketArray 
+                } 
+            });
+            res.status(200).json({message: "folderSuccessfully recovered!", backet: newBacketArray});
+        }
+        catch (error) {
+            res.status(400).json({message: "Error!"});
+            console.log(error);
+        }
+
+    }
+    
 }
 module.exports = new profileController()

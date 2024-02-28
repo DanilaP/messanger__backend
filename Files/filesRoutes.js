@@ -9,5 +9,7 @@ router.post('/changeFolderName', controller.changeFolderName);
 router.post('/changeFileStatus', controller.changeFileStatus);
 router.post('/recoverUserFile', controller.recoverUserFile);
 router.post('/deleteFileFromBacket', controller.deleteFileFromBacket);
+router.post('/moveFolderToBacket', controller.moveFolderToBacket);
+router.post('/recoverFolderFromBacket', controller.recoverFolderFromBacket);
 
 module.exports = router

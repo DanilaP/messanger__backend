@@ -105,7 +105,8 @@ app.post("/createFolder", async function (req, res) {
             folderName: req.body.folderName,
             folderId: currentUser.folders.length + 1,
             parentFolderId: req.body.parentFolderId,
-            status: "public"
+            status: "public",
+            isDeleted: false
         }]}});
         currentUser.folders = [...currentUser.folders, {
             folderName: req.body.folderName,

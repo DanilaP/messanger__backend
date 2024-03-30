@@ -112,6 +112,8 @@ app.post("/createFolder", async function (req, res) {
             folderName: req.body.folderName,
             folderId: currentUser.folders.length + 1,
             parentFolderId: req.body.parentFolderId,
+            status: "public",
+            isDeleted: false
         }]
         res.status(200).json({
             message: "Folder created sucessfull", 

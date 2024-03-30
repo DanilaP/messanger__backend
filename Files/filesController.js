@@ -191,12 +191,14 @@ class profileController {
             newFoldersArray = [...newFoldersArray, deletedFolder];
             
             
+            
             await User.updateOne({ _id: userId.id }, { $set: 
                 { 
                 folders: newFoldersArray, 
                 backet: newBacketArray 
                 } 
-            });
+            }); 
+  
             res.status(200).json({
                 message: "Folder now in your backet", 
                 folders: newFoldersArray.filter(el => el.parentFolderId === req.body.parentFolderId),

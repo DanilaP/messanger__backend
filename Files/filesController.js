@@ -18,7 +18,8 @@ class profileController {
                 size: newfiles[indexOfChangedFile].size,
                 type: newfiles[indexOfChangedFile].type,
                 folderId: newfiles[indexOfChangedFile].folderId,
-                status: newfiles[indexOfChangedFile].status
+                status: newfiles[indexOfChangedFile].status,
+                date: newfiles[indexOfChangedFile].date
             };
 
             await User.updateOne({ _id: userId.id }, { $set: { files: newfiles } });

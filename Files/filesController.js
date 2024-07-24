@@ -75,7 +75,7 @@ class profileController {
             })
             let newFoldersArray = user.folders.filter(el => !arr.includes(el.folderId));
             let newFilesArray = user.files.filter(el => !arr.includes(el.folderId));
-            let newUserBacket = user.backet.filter(el => !el.folderId == req.body.folderId);
+            let newUserBacket = user.backet.filter(el => el.folderId !== req.body.folderId);
             
             user.files.map((el) => {
                 if (arr.includes(el.folderId)) {
@@ -91,7 +91,7 @@ class profileController {
             });
             res.status(200).json({
                 message: "Folder was deleted succesfull", 
-                folders: newFoldersArray.filter(el => el.parentFolderId === req.body.parentFolderId),
+                folders: newFoldersArray,
                 files: newFilesArray,
                 backet: newUserBacket
             })

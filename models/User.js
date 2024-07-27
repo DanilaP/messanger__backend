@@ -1,15 +1,15 @@
 const {model, Schema} = require('mongoose');
 
 const User = new Schema({
-    userLogin: {type: String, unique: true, required: true},
-    userPassword: {type: String, required: true},
-    balance: {type: Number, required: true},
-    avatar: {type: String, unique: false, required: true},
-    files: {type: Array},
-    secretAccessCode: {type: String},
-    folders: {type: Array},
-    memory: {type: Number},
-    backet: {type: Array}
+    name: {type: String, required: true},
+    email: {type: String, unique: true, required: true},
+    password: {type: String, required: true},
+    regard: {type: Number},
+    paper: {type: Number},
+    rubles: {type: Number},
+    smoke: {type: Number},
+    friends: {type: Array},
+    sugar: {type: Number},
 })
 
 module.exports = model('User', User)

@@ -1,6 +1,4 @@
 const User = require("../../models/User");
-const bcrypt = require('bcryptjs')
-const jwt_decode = require('jwt-decode')
 const jwt = require('jsonwebtoken');
 
 const generateAccessToken = (id) => {
@@ -32,6 +30,9 @@ class AuthController {
                     smoke: 0,
                     friends: [],
                     sugar: 0,
+                    gun: 0,
+                    poison: 0,
+                    knife: 0,
                 }
                 const token = generateAccessToken(user._id);
                 await User.create(user);

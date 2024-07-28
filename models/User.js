@@ -10,6 +10,9 @@ const User = new Schema({
     smoke: {type: Number},
     friends: {type: Array},
     sugar: {type: Number},
+    gun: {type: Object},
+    poison: {type: Object},
+    knife: {type: Object},
 })
 
 module.exports = model('User', User)

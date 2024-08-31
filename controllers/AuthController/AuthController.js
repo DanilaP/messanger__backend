@@ -12,30 +12,23 @@ class AuthController {
 
     async registration(req, res) {
         try {
-            const email = req.body.email;
-            const password = req.body.password;
+            const { email, password, name } = req.body;
             const isUserExists = await User.find({email});
             
             if (isUserExists.length !== 0) {
                 res.status(400).json({message: "Данный пользователь уже существует"})
             }
             else {
-                const user = {
-                    name: "Прибывший зек",
+                const user = new User({
+                    name: name,
                     email: email, 
                     password: password, 
-                    regard: 0,
-                    paper: 0,
-                    rubles: 0,
-                    smoke: 0,
                     friends: [],
-                    sugar: 0,
-                    gun: 0,
-                    poison: 0,
-                    knife: 0,
-                }
+                    avatar: "http://localhost:5000/UserAvatars/avatar.jpg",
+                    friendRequests: [],
+                })
+                await user.save();
                 const token = generateAccessToken(user._id);
-                await User.create(user);
                 res.json({message: "Регистрация прошла успешно", user: user, token: token});
             }
         }
@@ -59,7 +52,7 @@ class AuthController {
                 return res.status(400).json({message: `Неправильный пароль!`});
             } else {
                 const token = generateAccessToken(user._id);
-                return res.json({message: `Успешный вход`, user: user, authToken: token});
+                return res.json({message: `Успешный вход`, user: user, token: token});
             }
         }
         catch (error) {

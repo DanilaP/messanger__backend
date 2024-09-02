@@ -1,12 +1,6 @@
 const User = require("../../models/User");
 const jwt = require('jsonwebtoken');
-
-const generateAccessToken = (id) => {
-    const payload = {
-        id: id,
-    }
-    return jwt.sign(payload, "SECRET_KEY_RANDOM", {expiresIn: "24h"});
-}
+const helpers = require('../../helpers/Helpers');
 
 class AuthController {
 
@@ -28,8 +22,8 @@ class AuthController {
                     friendRequests: [],
                 })
                 await user.save();
-                const token = generateAccessToken(user._id);
-                res.json({message: "Регистрация прошла успешно", user: user, token: token});
+                const token = helpers.generateAccessToken(user._id);
+                res.status(200).json({message: "Регистрация прошла успешно", user: user, token: token});
             }
         }
         catch (error) {
@@ -51,8 +45,8 @@ class AuthController {
             if (userPassword !== user.password) {
                 return res.status(400).json({message: `Неправильный пароль!`});
             } else {
-                const token = generateAccessToken(user._id);
-                return res.json({message: `Успешный вход`, user: user, token: token});
+                const token = helpers.generateAccessToken(user._id);
+                return res.status(200).json({message: `Успешный вход`, user: user, token: token});
             }
         }
         catch (error) {

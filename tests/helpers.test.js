@@ -5,6 +5,7 @@ const JestMock = require("jest-mock-req-res");
 
 jest.mock('jsonwebtoken', () => ({
     decode: jest.fn(() => ({ id: 'UserID' })),
+    sign: jest.fn(() => ("token")),
 }));
 jest.mock('../models/User', () => ({
     findOne: jest.fn(),
@@ -35,5 +36,12 @@ describe('Тестирование хелпера getUserFromToken', () => {
         const req = JestMock.mockRequest({headers: {   }});
         const user = await helpers.getUserFromToken(req);
         expect(user).toEqual("Ошибка при получении объекта пользователя!");
+    });
+});
+
+describe('Тестирование хелпера generateAccessToken', () => {
+    it('Должен возвращать токен при получении id', () => {
+        const token = helpers.generateAccessToken(userObjectForTesting._id);
+        expect(typeof token).toBe("string");
     });
 });

@@ -1,5 +1,6 @@
 const jwt_decode = require('jwt-decode');
 const User = require("../models/User");
+const jwt = require('jsonwebtoken');
 
 async function getUserFromToken(req) {
     try {
@@ -13,5 +14,12 @@ async function getUserFromToken(req) {
         return "Ошибка при получении объекта пользователя!"
     }
 }
-  
-module.exports = { getUserFromToken };
+function generateAccessToken(id) {
+    const payload = {
+        id: id,
+    }
+    const token = jwt.sign(payload, "SECRET_KEY_RANDOM", {expiresIn: "24h"});
+    return token;
+}
+
+module.exports = { getUserFromToken, generateAccessToken };

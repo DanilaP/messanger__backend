@@ -5,11 +5,13 @@ const fileUpload = require('express-fileupload');
 const authRouter = require('./controllers/AuthController/AuthRouter');
 const usersRouter = require('./controllers/UsersController/UsersRouter');
 const messagesRouter = require('./controllers/MessagesController/MessagesRouter');
+const postsRouter = require('./controllers/PostsContoller/PostsRouter');
 const http = require('http');
 const WebSocket = require('ws');
 const jwt_decode = require('jwt-decode');
 const User = require("./models/User");
 const Dialogs = require("./models/Dialogs");
+const bodyParser = require('body-parser');
 
 const PORT = 5000;
 const BD_URL = `mongodb+srv://danila:355473288@cluster0.ag5ij.mongodb.net/prisonDataBase?retryWrites=true&w=majority`;
@@ -22,10 +24,12 @@ mongoose.set('strictQuery', false);
 app.use(fileUpload())
 app.use(express.json());
 app.use(express.static('./staticFiles'));
+app.use(express.urlencoded({ extended: true }))
 
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/messages', messagesRouter);
+app.use('/posts', postsRouter);
 
 const wss = new WebSocket.Server({ server });
 let clients = [];

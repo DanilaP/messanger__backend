@@ -7,6 +7,7 @@ const User = new Schema({
     friends: {type: Array},
     avatar: {type: String},
     friendRequests: {type: Array},
+    posts: {type: Array},
 })
 
 module.exports = model('User', User)

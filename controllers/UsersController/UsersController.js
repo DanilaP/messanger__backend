@@ -49,7 +49,8 @@ class UsersController {
             res.status(200).json({message: "Успешное получение данных о пользователе!", userInfo: {
                 name: userInfo.name,
                 friends: userInfo.friends,
-                avatar: userInfo.avatar
+                avatar: userInfo.avatar,
+                posts: userInfo.posts
             }});
         }
         catch (error) {
